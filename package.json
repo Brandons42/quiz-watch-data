@@ -1,0 +1,8 @@
+{
+	"name": "quiz-watch-data",
+	"version": "1.0.0",
+	"devDependencies": {
+		"gulp": "^4.0.2",
+		"gulp-gh-pages": "^0.5.4"
+	}
+}
