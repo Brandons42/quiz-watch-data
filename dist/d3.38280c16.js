@@ -236,11 +236,7 @@ var drawR = function drawR(limit) {
   }).y(function (d) {
     return y(d.y);
   }));
-  svg.append('g').attr('class', 'dots').datum(rs[limit]).append('circle').attr('cx', function (d) {
-    return x(d.x);
-  }).attr('cy', function (d) {
-    return y(d.y);
-  }).attr('r', 20);
+  svg.append('circle').attr('class', 'dots').attr('cx', x(rs[limit].x)).attr('cy', y(rs[limit].y)).attr('r', 10);
 };
 
 module.exports = drawR;
