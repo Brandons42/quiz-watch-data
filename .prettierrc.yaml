@@ -1,3 +1,4 @@
+arrowParens: 'avoid'
 jsxSingleQuote: true
 singleQuote: true
 trailingComma: 'none'
