@@ -117,7 +117,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"measurements.js":[function(require,module,exports) {
+})({"lib/measurements.js":[function(require,module,exports) {
 var margin = {
   top: 10,
   right: 30,
@@ -128,7 +128,7 @@ module.exports.margin = margin;
 var docWidth = document.body.clientWidth / (document.body.clientWidth > 700 ? 2 : 1);
 module.exports.height = docWidth - margin.top - margin.bottom;
 module.exports.width = docWidth - margin.left - margin.right;
-},{}],"createGraph.js":[function(require,module,exports) {
+},{}],"lib/createGraph.js":[function(require,module,exports) {
 var _require = require('./measurements'),
     height = _require.height,
     margin = _require.margin,
@@ -142,13 +142,13 @@ module.exports = function (id, xAxis, xLabel, yAxis, yLabel) {
   svg.append('text').attr('text-anchor', 'end').attr('transform', 'rotate(-90)').attr('y', -margin.left + 20).attr('x', -margin.top - height / 2 + 20).text(yLabel);
   return svg;
 };
-},{"./measurements":"measurements.js"}],"data.json":[function(require,module,exports) {
+},{"./measurements":"lib/measurements.js"}],"data.json":[function(require,module,exports) {
 module.exports = {
   "requests": [[423, 327, 273, 224, 545, 349, 266, 344, 295, 249, 373, 502, 447, 328, 239, 251, 198, 220, 224, 252, 238, 182, 237, 243, 318, 326, 286, 216, 185, 164], [210, 264, 332, 344, 332, 196, 133, 271, 258, 452, 356, 320, 302, 249, 257, 340, 442, 285, 381, 339, 361, 264, 296, 436, 501, 532, 425, 544, 482, 245, 303], [410, 302, 292, 315, 391, 285, 439, 496, 308, 417, 260, 288, 302, 304, 324, 239, 311, 247, 254, 362, 379, 336, 257, 445, 340, 341, 259, 300, 325, 314], [278, 286, 317, 233, 234, 266, 467, 363, 232, 440, 367, 374, 460, 375, 386, 285, 384, 369, 484, 294, 263, 430, 493, 480, 386, 442, 294, 187, 275, 215, 159], [224, 174, 249, 302, 374, 256, 344, 375, 207, 252, 287, 215, 188, 195, 281, 302, 270, 278, 236, 286, 293, 485, 317, 310, 302, 340, 208, 445, 355, 337, 314], [280, 300, 494, 379, 298, 400, 414, 397, 359, 421, 616, 462, 436, 488, 375, 395, 564, 674, 777, 629, 905, 482, 648, 732, 696, 794, 824, 800, 498, 656], [690, 469, 570, 627, 641, 495, 582, 659, 582, 651, 593, 799, 537, 683, 733, 677, 806, 725, 1136, 663, 834, 938, 727, 774, 774, 796, 568, 566, 601, 733, 550], [775, 1032, 720, 678, 793, 1253, 1147, 1082, 830, 729, 934, 894, 842, 942, 987, 1073, 1047, 859, 1070, 1262, 1226, 1045, 1022, 789, 685, 846, 1147, 1170, 604, 973], [655, 912, 748, 789, 808, 1053, 948, 747, 897, 1110, 978, 873, 692, 845, 826, 831, 867, 830, 703, 817, 733, 675, 649, 689, 691, 635, 617, 613, 731, 572, 531], [501, 466, 658, 757, 644, 722, 585, 776, 830, 730, 889, 808, 723, 662, 557, 697, 847, 964, 620, 710, 903, 617, 698, 762, 906, 518, 578, 794, 592, 721, 673], [763, 586, 527, 694, 622, 548, 909, 746, 601, 528, 605, 522, 860, 712, 891, 782, 580, 630, 554, 772, 622, 765, 482, 613, 718, 1095, 824, 946, 974]],
   "tournaments": [[0, 0, 0, 0, 1, 10, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 0, 1, 1, 9, 1, 0, 0, 0, 0, 0, 11, 1, 0, 0], [0, 0, 0, 4, 1, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 8, 1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 3, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 2, 1], [0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 2, 1, 0, 0, 0, 0, 0, 3, 4, 0, 0, 0, 0, 0, 5, 1, 0, 0, 0], [0, 0, 2, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 5, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 2, 1, 0, 0, 0, 0, 0, 14, 1, 0, 0, 0, 0, 0, 12, 2, 1], [0, 0, 0, 0, 15, 1, 2, 0, 0, 1, 0, 24, 0, 0, 0, 1, 0, 0, 23, 0, 1, 0, 0, 1, 0, 20, 2, 0, 0, 1, 0], [0, 30, 3, 0, 0, 0, 1, 0, 23, 1, 0, 1, 0, 0, 0, 30, 0, 1, 1, 1, 1, 0, 18, 1, 0, 0, 0, 0, 0, 2], [1, 0, 1, 0, 2, 1, 19, 0, 0, 0, 0, 0, 1, 13, 1, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 7, 0, 1, 1, 1, 0, 0, 16, 0, 0, 0, 0, 1, 0, 18, 1, 0, 0, 0, 0, 1, 27, 0, 0, 0, 1, 1, 1], [11, 0, 0, 0, 0, 0, 0, 25, 1, 1, 0, 0, 0, 0, 15, 0, 0, 0, 0, 1, 0, 20, 5, 1, 1, 0, 0, 0, 21]]
 };
-},{}],"getDays.js":[function(require,module,exports) {
-var data = require('./data.json');
+},{}],"lib/getDays.js":[function(require,module,exports) {
+var data = require('../data.json');
 
 var getDays = function getDays(limit) {
   var days = [];
@@ -183,7 +183,7 @@ var getDays = function getDays(limit) {
 };
 
 module.exports = getDays;
-},{"./data.json":"data.json"}],"getR.js":[function(require,module,exports) {
+},{"../data.json":"data.json"}],"lib/getR.js":[function(require,module,exports) {
 var getR = function getR(days) {
   var xSum = days.reduce(function (acc, cur) {
     return acc + cur.tournaments;
@@ -205,7 +205,7 @@ var getR = function getR(days) {
 };
 
 module.exports = getR;
-},{}],"drawR.js":[function(require,module,exports) {
+},{}],"lib/drawR.js":[function(require,module,exports) {
 var createGraph = require('./createGraph');
 
 var getDays = require('./getDays');
@@ -244,7 +244,7 @@ var drawR = function drawR(limit) {
 };
 
 module.exports = drawR;
-},{"./createGraph":"createGraph.js","./getDays":"getDays.js","./getR":"getR.js","./measurements":"measurements.js"}],"drawScatter.js":[function(require,module,exports) {
+},{"./createGraph":"lib/createGraph.js","./getDays":"lib/getDays.js","./getR":"lib/getR.js","./measurements":"lib/measurements.js"}],"lib/drawScatter.js":[function(require,module,exports) {
 var createGraph = require('./createGraph');
 
 var _require = require('./measurements'),
@@ -273,14 +273,14 @@ var drawScatter = function drawScatter(days) {
 };
 
 module.exports = drawScatter;
-},{"./createGraph":"createGraph.js","./measurements":"measurements.js"}],"d3.js":[function(require,module,exports) {
-var drawR = require('./drawR');
+},{"./createGraph":"lib/createGraph.js","./measurements":"lib/measurements.js"}],"d3.js":[function(require,module,exports) {
+var drawR = require('./lib/drawR');
 
-var drawScatter = require('./drawScatter');
+var drawScatter = require('./lib/drawScatter');
 
-var getDays = require('./getDays');
+var getDays = require('./lib/getDays');
 
-var getR = require('./getR');
+var getR = require('./lib/getR');
 
 var output = document.getElementById('output');
 drawR(7);
@@ -297,7 +297,7 @@ slider.oninput = function () {
   drawScatter(days);
   output.innerHTML = "Days: ".concat(this.value, ", R: ").concat(getR(days));
 };
-},{"./drawR":"drawR.js","./drawScatter":"drawScatter.js","./getDays":"getDays.js","./getR":"getR.js"}],"../../.config/yarn/global/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./lib/drawR":"lib/drawR.js","./lib/drawScatter":"lib/drawScatter.js","./lib/getDays":"lib/getDays.js","./lib/getR":"lib/getR.js"}],"../../.config/yarn/global/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -325,7 +325,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62507" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62684" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -1,7 +1,7 @@
-const drawR = require('./drawR');
-const drawScatter = require('./drawScatter');
-const getDays = require('./getDays');
-const getR = require('./getR');
+const drawR = require('./lib/drawR');
+const drawScatter = require('./lib/drawScatter');
+const getDays = require('./lib/getDays');
+const getR = require('./lib/getR');
 
 const output = document.getElementById('output');
 
