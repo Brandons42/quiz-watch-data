@@ -120,13 +120,13 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 })({"lib/measurements.js":[function(require,module,exports) {
 var margin = {
   top: 10,
-  right: 30,
-  bottom: 30,
-  left: 60
+  right: 45,
+  bottom: 50,
+  left: 75
 };
 module.exports.margin = margin;
 var docWidth = document.body.clientWidth / (document.body.clientWidth > 700 ? 2 : 1);
-module.exports.height = docWidth - margin.top - margin.bottom;
+module.exports.height = docWidth * 4 / 5 - margin.top - margin.bottom;
 module.exports.width = docWidth - margin.left - margin.right;
 },{}],"lib/createGraph.js":[function(require,module,exports) {
 var _require = require('./measurements'),
@@ -134,12 +134,25 @@ var _require = require('./measurements'),
     margin = _require.margin,
     width = _require.width;
 
-module.exports = function (id, xAxis, xLabel, yAxis, yLabel) {
+module.exports = function (id, xAxis, xLabel, yAxis, yLabel, heat) {
   var svg = d3.select('#' + id).append('svg').attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom).append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-  svg.append('g').attr('transform', 'translate(0,' + height + ')').call(d3.axisBottom(xAxis)).style('fill', '#678');
-  svg.append('text').attr('text-anchor', 'end').attr('x', width / 2 + margin.left).attr('y', height + margin.top + 20).text(xLabel);
-  svg.append('g').call(d3.axisLeft(yAxis)).style('fill', '#678');
-  svg.append('text').attr('text-anchor', 'end').attr('transform', 'rotate(-90)').attr('y', -margin.left + 20).attr('x', -margin.top - height / 2 + 20).text(yLabel);
+  svg.append('rect').attr('x', 0).attr('y', 0).attr('height', height).attr('width', width).style('fill', '#EBEBEB');
+
+  if (heat) {
+    var fills = ['B7F0AD', 'D2FF96', 'E8D33F', 'D17B0F', '832232'];
+    var sectionLabels = ['Very strong', 'Strong', 'Moderate', 'Weak', 'Very weak'];
+
+    for (var q = 0; q < 5; q++) {
+      svg.append('rect').attr('x', 0).attr('y', height * q / 5).attr('height', height / 5).attr('width', width).style('fill', "#".concat(fills[q], "44"));
+      svg.append('text').attr('class', 'section-label').attr('dominant-baseline', 'middle').attr('text-anchor', 'middle').attr('transform', 'rotate(90)').attr('x', height * (q * 2 + 1) / 10).attr('y', -width - 25).text(sectionLabels[q]);
+      svg.append('text').attr('class', 'section-label').attr('dominant-baseline', 'middle').attr('text-anchor', 'middle').attr('transform', 'rotate(90)').attr('x', height * (q * 2 + 1) / 10).attr('y', -width - 10).text('correlation');
+    }
+  }
+
+  svg.append('g').attr('transform', 'translate(0,' + height + ')').call(d3.axisBottom(xAxis).tickSize(-height).ticks(9)).select('.domain').remove();
+  svg.append('text').attr('class', 'label').attr('dominant-baseline', 'middle').attr('text-anchor', 'middle').attr('x', width / 2).attr('y', height + margin.top + 20).text(xLabel);
+  svg.append('g').call(d3.axisLeft(yAxis).tickSize(-width).ticks(6)).select('.domain').remove();
+  svg.append('text').attr('class', 'label').attr('dominant-baseline', 'middle').attr('text-anchor', 'middle').attr('transform', 'rotate(-90)').attr('x', -margin.top - height / 2).attr('y', -margin.left + 25).text(yLabel);
   return svg;
 };
 },{"./measurements":"lib/measurements.js"}],"data.json":[function(require,module,exports) {
@@ -218,7 +231,7 @@ var _require = require('./measurements'),
 
 var x = d3.scaleLinear().domain([0, 28]).range([0, width]);
 var y = d3.scaleLinear().domain([0, 1]).range([height, 0]);
-var svg = createGraph('r', x, 'x Days', y, 'R');
+var svg = createGraph('r', x, 'x Days', y, 'R', true);
 
 var drawR = function drawR(limit) {
   var rs = [];
@@ -230,18 +243,36 @@ var drawR = function drawR(limit) {
     });
   }
 
-  console.log(rs);
-  svg.append('path').datum(rs).attr('fill', 'none').attr('stroke', 'steelblue').attr('stroke-width', 1.5).attr('d', d3.line().x(function (d) {
+  svg.append('path').datum(rs).attr('fill', 'none').attr('stroke', '#26377c').attr('stroke-width', 5).attr('d', d3.line().x(function (d) {
     return x(d.x);
   }).y(function (d) {
     return y(d.y);
   }));
-  svg.append('circle').attr('class', 'dots').attr('cx', x(rs[limit].x)).attr('cy', y(rs[limit].y)).attr('r', 10);
+  /*svg
+  	.append('path')
+  	.datum(rs)
+  	.attr('fill', 'none')
+  	.attr('stroke', 'black')
+  	.attr('stroke-width', 1.5)
+  	.attr(
+  		'd',
+  		d3
+  			.line()
+  			.x(d => x(d.x))
+  			.y(d => y(d.y * d.y))
+  	);*/
+
+  svg.append('circle').attr('class', 'dots').attr('cx', x(rs[limit].x)).attr('cy', y(rs[limit].y)).attr('fill', '#26377c').attr('r', 12);
 };
 
 module.exports = drawR;
-},{"./createGraph":"lib/createGraph.js","./getDays":"lib/getDays.js","./getR":"lib/getR.js","./measurements":"lib/measurements.js"}],"lib/drawScatter.js":[function(require,module,exports) {
+},{"./createGraph":"lib/createGraph.js","./getDays":"lib/getDays.js","./getR":"lib/getR.js","./measurements":"lib/measurements.js"}],"lib/symbols.js":[function(require,module,exports) {
+var symbols = [d3.symbolCircle, d3.symbolSquare, d3.symbolDiamond, d3.symbolTriangle, d3.symbolCross, d3.symbolWye, d3.symbolStar];
+module.exports = symbols;
+},{}],"lib/drawScatter.js":[function(require,module,exports) {
 var createGraph = require('./createGraph');
+
+var symbols = require('./symbols');
 
 var _require = require('./measurements'),
     height = _require.height,
@@ -252,9 +283,8 @@ var y = d3.scaleLinear().domain([0, 7000]).range([height, 0]);
 var svg = createGraph('scatter', x, 'Tournaments within next x days (indicated on slider)', y, 'Questions answered within the day');
 
 var drawScatter = function drawScatter(days) {
-  var months = ['000', '111', '222', '333', '444', '555', '777', '888', '999', 'aaa', 'bbb'];
-  var symbol = d3.symbol().size(20);
-  var symbols = [d3.symbolCircle, d3.symbolSquare, d3.symbolDiamond, d3.symbolTriangle, d3.symbolCross, d3.symbolWye, d3.symbolStar];
+  var months = ['832232', 'D17B0F', 'E8D33F', 'EDFF7A', 'D2FF96', 'B7F0AD', 'C3DFE0', '26377c', '0B0033', '370031'];
+  var symbol = d3.symbol().size(80);
   svg.append('g').attr('class', 'dots').selectAll('dot').data(days).enter() //.append('circle')
   .append('path') //.attr('cx', d => x(d.tournaments))
   //.attr('cy', d => y(d.questions))
@@ -269,31 +299,53 @@ var drawScatter = function drawScatter(days) {
 };
 
 module.exports = drawScatter;
-},{"./createGraph":"lib/createGraph.js","./measurements":"lib/measurements.js"}],"d3.js":[function(require,module,exports) {
+},{"./createGraph":"lib/createGraph.js","./symbols":"lib/symbols.js","./measurements":"lib/measurements.js"}],"lib/drawSymbols.js":[function(require,module,exports) {
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+var symbols = require('./symbols');
+
+var svgs = _toConsumableArray(document.getElementById('symbols').children).map(function (div) {
+  return div.children[0];
+});
+
+for (var q = 0; q < 7; q++) {
+  d3.select(svgs[q]).append('svg').attr('overflow', 'visible').attr('x', '50%').attr('y', '50%').append('path').attr('d', d3.symbol().type(symbols[q]).size(1000));
+}
+},{"./symbols":"lib/symbols.js"}],"d3.js":[function(require,module,exports) {
 var drawR = require('./lib/drawR');
 
 var drawScatter = require('./lib/drawScatter');
 
-var getDays = require('./lib/getDays');
+var drawSymbols = require('./lib/drawSymbols');
 
-var getR = require('./lib/getR');
+var getDays = require('./lib/getDays'); //const getR = require('./lib/getR');
+//const output = document.getElementById('output');
 
-var output = document.getElementById('output');
+
 drawR(7);
 var initialDays = getDays(7);
-drawScatter(initialDays);
-output.innerHTML = "Days: 7, R: ".concat(getR(initialDays));
-var slider = document.getElementById('myRange');
+drawScatter(initialDays); //output.innerHTML = `Days: 7, R: ${getR(initialDays)}`;
+
+var slider = document.getElementById('slider');
 
 slider.oninput = function () {
   d3.selectAll('.dots').remove();
   var limit = parseInt(this.value);
   drawR(limit);
   var days = getDays(limit);
-  drawScatter(days);
-  output.innerHTML = "Days: ".concat(this.value, ", R: ").concat(getR(days));
+  drawScatter(days); //output.innerHTML = `Days: ${this.value}, R: ${getR(days)}`;
 };
-},{"./lib/drawR":"lib/drawR.js","./lib/drawScatter":"lib/drawScatter.js","./lib/getDays":"lib/getDays.js","./lib/getR":"lib/getR.js"}],"../../.config/yarn/global/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./lib/drawR":"lib/drawR.js","./lib/drawScatter":"lib/drawScatter.js","./lib/drawSymbols":"lib/drawSymbols.js","./lib/getDays":"lib/getDays.js"}],"../../.config/yarn/global/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -321,7 +373,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62684" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54079" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

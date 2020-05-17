@@ -1,44 +1,137 @@
-#charts {
+* {
+	box-sizing: border-box;
+}
+
+.label {
+	font-family: 'Montserrat', sans-serif;
+	font-weight: 500;
+}
+
+.section-label {
+	font-size: 15px;
+}
+
+#colors,
+#symbols div p,
+.section-label,
+.tick text {
+	font-family: 'Montserrat', sans-serif;
+	font-weight: 300;
+}
+
+.tick line {
+	stroke: white;
+}
+
+#charts,
+#colors {
 	display: flex;
+	flex-wrap: wrap;
 }
 
-.slidecontainer {
-	width: 100%; /* Width of the outside container */
+#colors div {
+	color: white;
+	flex: 1;
+	min-width: 100px;
+	text-align: center;
+	text-shadow: 0 1px 2px black;
 }
 
-/* The slider itself */
-.slider {
-	-webkit-appearance: none; /* Override default CSS styles */
-	appearance: none;
-	width: 100%; /* Full-width */
-	height: 25px; /* Specified height */
-	background: #d3d3d3; /* Grey background */
-	outline: none; /* Remove outline */
-	opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
-	-webkit-transition: 0.2s; /* 0.2 seconds transition on hover */
+#colors div:nth-child(1) {
+	background-color: #832232;
+}
+
+#colors div:nth-child(2) {
+	background-color: #d17b0f;
+}
+
+#colors div:nth-child(3) {
+	background-color: #e8d33f;
+}
+
+#colors div:nth-child(4) {
+	background-color: #edff7a;
+}
+
+#colors div:nth-child(5) {
+	background-color: #d2ff96;
+}
+
+#colors div:nth-child(6) {
+	background-color: #b7f0ad;
+}
+
+#colors div:nth-child(7) {
+	background-color: #c3dfe0;
+}
+
+#colors div:nth-child(8) {
+	background-color: #26377c;
+}
+
+#colors div:nth-child(9) {
+	background-color: #0b0033;
+}
+
+#colors div:nth-child(10) {
+	background-color: #370031;
+}
+
+#info {
+	padding: 0 10vw;
+}
+
+#slidecontainer {
+	width: 100%;
+}
+
+#slider {
+	-webkit-appearance: none;
+	width: 100%;
+	height: 15px;
+	border-radius: 5px;
+	background: #ebebeb;
+	outline: none;
+	-webkit-transition: 0.2s;
 	transition: opacity 0.2s;
 }
 
-/* Mouse-over effects */
-.slider:hover {
-	opacity: 1; /* Fully shown on mouse-over */
-}
-
-/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
-.slider::-webkit-slider-thumb {
-	-webkit-appearance: none; /* Override default look */
+#slider::-webkit-slider-thumb {
+	-webkit-appearance: none;
 	appearance: none;
-	width: 25px; /* Set a specific slider handle width */
-	height: 25px; /* Slider handle height */
-	background: #4caf50; /* Green background */
-	cursor: pointer; /* Cursor on hover */
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	background: #26377c;
+	cursor: pointer;
 }
 
-.slider::-moz-range-thumb {
-	width: 25px; /* Set a specific slider handle width */
-	height: 25px; /* Slider handle height */
-	background: #4caf50; /* Green background */
-	cursor: pointer; /* Cursor on hover */
+#slider::-moz-range-thumb {
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	background: #26377c;
+	cursor: pointer;
+}
+
+#symbols {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+#symbols div {
+	color: #26377c;
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	min-width: 130px;
+	width: 11vw;
+}
+
+#symbols div svg {
+	height: 80px;
+	width: 100%;
 }
 
 
