@@ -1,31 +1,79 @@
 const drawR = require('./lib/drawR');
 const drawScatter = require('./lib/drawScatter');
-const drawSymbols = require('./lib/drawSymbols');
 const getDays = require('./lib/getDays');
+const monthColors = require('./lib/monthColors');
+require('./lib/drawSymbols');
 //const getR = require('./lib/getR');
 
 //const output = document.getElementById('output');
 
-drawR(7);
+const divs = [...document.getElementById('colors').children].map(
+	div => div.children[0]
+);
 
-const initialDays = getDays(7);
+const months = [];
 
-drawScatter(initialDays);
+for (let q = 0; q < divs.length; q++) {
+	months.push(q);
 
-//output.innerHTML = `Days: 7, R: ${getR(initialDays)}`;
+	divs[q].style.backgroundColor = monthColors[q];
+}
+
+let initialized = false;
 
 const slider = document.getElementById('slider');
 
-slider.oninput = function () {
-	d3.selectAll('.dots').remove();
+const draw = redrawLine => {
+	if (initialized) {
+		d3.selectAll('.dots').remove();
 
-	const limit = parseInt(this.value);
+		if (redrawLine) {
+			d3.select('#r-line').remove();
+		}
+	} else {
+		initialized = true;
+	}
 
-	drawR(limit);
+	const limit = parseInt(slider.value);
 
-	const days = getDays(limit);
+	drawR(limit, months);
+
+	const days = getDays(limit, months);
 
 	drawScatter(days);
-
-	//output.innerHTML = `Days: ${this.value}, R: ${getR(days)}`;
 };
+
+draw();
+
+const setColor = q => {
+	if (months.includes(q)) {
+		divs[q].style.backgroundColor = monthColors[q];
+	} else {
+		divs[q].style.backgroundColor = 'transparent';
+	}
+};
+
+for (let q = 0; q < divs.length; q++) {
+	divs[q].onclick = () => {
+		if (months.includes(q)) {
+			months.splice(months.indexOf(q), 1);
+		} else {
+			months.push(q);
+		}
+
+		setColor(q);
+
+		draw(true);
+	};
+
+	divs[q].onmouseleave = () => setColor(q);
+
+	divs[q].onmouseover = () =>
+		(divs[q].style.backgroundColor = monthColors[q] + '44');
+}
+
+//output.innerHTML = `Days: 7, R: ${getR(initialDays)}`;
+
+slider.oninput = draw;
+
+//output.innerHTML = `Days: ${this.value}, R: ${getR(days)}`;

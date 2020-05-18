@@ -135,7 +135,7 @@ var _require = require('./measurements'),
     width = _require.width;
 
 module.exports = function (id, xAxis, xLabel, yAxis, yLabel, heat) {
-  var svg = d3.select('#' + id).append('svg').attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom).append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+  var svg = d3.select('#' + id).append('svg').attr('height', height + margin.top + margin.bottom).attr('width', width + margin.left + margin.right).append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
   svg.append('rect').attr('x', 0).attr('y', 0).attr('height', height).attr('width', width).style('fill', '#EBEBEB');
 
   if (heat) {
@@ -163,32 +163,35 @@ module.exports = {
 },{}],"lib/getDays.js":[function(require,module,exports) {
 var data = require('../data.json');
 
-var getDays = function getDays(limit) {
+var getDays = function getDays(limit, months) {
   var days = [];
   var dayOfWeek = 1;
 
   for (var q = 0; q < data.tournaments.length - 1; q++) {
-    for (var r = 0; r < data.tournaments[q].length; r++) {
-      var tournaments = 0;
+    if (months.includes(q)) {
+      for (var r = 0; r < data.tournaments[q].length; r++) {
+        var tournaments = 0;
 
-      for (var s = 0; s < limit + 1; s++) {
-        if (data.tournaments[q][r + s]) {
-          tournaments += data.tournaments[q][r + s];
-        } else if (data.tournaments[q + 1]) {
-          for (var t = 0; t < limit + 1 - s; t++) {
-            tournaments += data.tournaments[q + 1][t];
+        for (var s = 0; s < limit + 1; s++) {
+          if (data.tournaments[q][r + s]) {
+            tournaments += data.tournaments[q][r + s];
+          } else if (data.tournaments[q + 1]) {
+            for (var t = 0; t < limit + 1 - s; t++) {
+              //console.log(data.tournaments[q + 1][t]);
+              tournaments += data.tournaments[q + 1][t];
+            }
+
+            break;
           }
-
-          break;
         }
-      }
 
-      days.push({
-        day: dayOfWeek++ % 7,
-        month: q,
-        questions: data.requests[q][r] * 5,
-        tournaments: tournaments
-      });
+        days.push({
+          day: dayOfWeek++ % 7,
+          month: q,
+          questions: data.requests[q][r] * 5,
+          tournaments: tournaments
+        });
+      }
     }
   }
 
@@ -233,44 +236,35 @@ var x = d3.scaleLinear().domain([0, 28]).range([0, width]);
 var y = d3.scaleLinear().domain([0, 1]).range([height, 0]);
 var svg = createGraph('r', x, 'x Days', y, 'R', true);
 
-var drawR = function drawR(limit) {
+var drawR = function drawR(limit, months) {
   var rs = [];
 
   for (var q = 0; q < 29; q++) {
     rs.push({
       x: q,
-      y: getR(getDays(q))
+      y: getR(getDays(q, months))
     });
   }
 
-  svg.append('path').datum(rs).attr('fill', 'none').attr('stroke', '#26377c').attr('stroke-width', 5).attr('d', d3.line().x(function (d) {
+  svg.append('path').datum(rs).attr('id', 'r-line').attr('d', d3.line().x(function (d) {
     return x(d.x);
   }).y(function (d) {
-    return y(d.y);
-  }));
-  /*svg
-  	.append('path')
-  	.datum(rs)
-  	.attr('fill', 'none')
-  	.attr('stroke', 'black')
-  	.attr('stroke-width', 1.5)
-  	.attr(
-  		'd',
-  		d3
-  			.line()
-  			.x(d => x(d.x))
-  			.y(d => y(d.y * d.y))
-  	);*/
-
-  svg.append('circle').attr('class', 'dots').attr('cx', x(rs[limit].x)).attr('cy', y(rs[limit].y)).attr('fill', '#26377c').attr('r', 12);
+    return y(d.y > 0 ? d.y : 0);
+  })).attr('fill', 'none').attr('stroke', '#26377c').attr('stroke-width', 5);
+  svg.append('circle').attr('class', 'dots').attr('cx', x(rs[limit].x)).attr('cy', y(rs[limit].y > 0 ? rs[limit].y : 0)).attr('fill', '#26377c').attr('r', 12);
 };
 
 module.exports = drawR;
-},{"./createGraph":"lib/createGraph.js","./getDays":"lib/getDays.js","./getR":"lib/getR.js","./measurements":"lib/measurements.js"}],"lib/symbols.js":[function(require,module,exports) {
+},{"./createGraph":"lib/createGraph.js","./getDays":"lib/getDays.js","./getR":"lib/getR.js","./measurements":"lib/measurements.js"}],"lib/monthColors.js":[function(require,module,exports) {
+var monthColors = ['#832232', '#D17B0F', '#E8D33F', '#EDFF7A', '#D2FF96', '#B7F0AD', '#C3DFE0', '#26377c', '#0B0033', '#370031'];
+module.exports = monthColors;
+},{}],"lib/symbols.js":[function(require,module,exports) {
 var symbols = [d3.symbolCircle, d3.symbolSquare, d3.symbolDiamond, d3.symbolTriangle, d3.symbolCross, d3.symbolWye, d3.symbolStar];
 module.exports = symbols;
 },{}],"lib/drawScatter.js":[function(require,module,exports) {
 var createGraph = require('./createGraph');
+
+var monthColors = require('./monthColors');
 
 var symbols = require('./symbols');
 
@@ -283,7 +277,6 @@ var y = d3.scaleLinear().domain([0, 7000]).range([height, 0]);
 var svg = createGraph('scatter', x, 'Tournaments within next x days (indicated on slider)', y, 'Questions answered within the day');
 
 var drawScatter = function drawScatter(days) {
-  var months = ['832232', 'D17B0F', 'E8D33F', 'EDFF7A', 'D2FF96', 'B7F0AD', 'C3DFE0', '26377c', '0B0033', '370031'];
   var symbol = d3.symbol().size(80);
   svg.append('g').attr('class', 'dots').selectAll('dot').data(days).enter() //.append('circle')
   .append('path') //.attr('cx', d => x(d.tournaments))
@@ -294,12 +287,12 @@ var drawScatter = function drawScatter(days) {
   .attr('transform', function (d) {
     return "translate(".concat(x(d.tournaments), ",").concat(y(d.questions), ")");
   }).style('fill', function (d) {
-    return '#' + months[d.month];
+    return monthColors[d.month];
   });
 };
 
 module.exports = drawScatter;
-},{"./createGraph":"lib/createGraph.js","./symbols":"lib/symbols.js","./measurements":"lib/measurements.js"}],"lib/drawSymbols.js":[function(require,module,exports) {
+},{"./createGraph":"lib/createGraph.js","./monthColors":"lib/monthColors.js","./symbols":"lib/symbols.js","./measurements":"lib/measurements.js"}],"lib/drawSymbols.js":[function(require,module,exports) {
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -322,30 +315,99 @@ for (var q = 0; q < 7; q++) {
   d3.select(svgs[q]).append('svg').attr('overflow', 'visible').attr('x', '50%').attr('y', '50%').append('path').attr('d', d3.symbol().type(symbols[q]).size(1000));
 }
 },{"./symbols":"lib/symbols.js"}],"d3.js":[function(require,module,exports) {
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 var drawR = require('./lib/drawR');
 
 var drawScatter = require('./lib/drawScatter');
 
-var drawSymbols = require('./lib/drawSymbols');
+var getDays = require('./lib/getDays');
 
-var getDays = require('./lib/getDays'); //const getR = require('./lib/getR');
+var monthColors = require('./lib/monthColors');
+
+require('./lib/drawSymbols'); //const getR = require('./lib/getR');
 //const output = document.getElementById('output');
 
 
-drawR(7);
-var initialDays = getDays(7);
-drawScatter(initialDays); //output.innerHTML = `Days: 7, R: ${getR(initialDays)}`;
+var divs = _toConsumableArray(document.getElementById('colors').children).map(function (div) {
+  return div.children[0];
+});
 
+var months = [];
+
+for (var q = 0; q < divs.length; q++) {
+  months.push(q);
+  divs[q].style.backgroundColor = monthColors[q];
+}
+
+var initialized = false;
 var slider = document.getElementById('slider');
 
-slider.oninput = function () {
-  d3.selectAll('.dots').remove();
-  var limit = parseInt(this.value);
-  drawR(limit);
-  var days = getDays(limit);
-  drawScatter(days); //output.innerHTML = `Days: ${this.value}, R: ${getR(days)}`;
+var draw = function draw(redrawLine) {
+  if (initialized) {
+    d3.selectAll('.dots').remove();
+
+    if (redrawLine) {
+      d3.select('#r-line').remove();
+    }
+  } else {
+    initialized = true;
+  }
+
+  var limit = parseInt(slider.value);
+  drawR(limit, months);
+  var days = getDays(limit, months);
+  drawScatter(days);
 };
-},{"./lib/drawR":"lib/drawR.js","./lib/drawScatter":"lib/drawScatter.js","./lib/drawSymbols":"lib/drawSymbols.js","./lib/getDays":"lib/getDays.js"}],"../../.config/yarn/global/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+
+draw();
+
+var setColor = function setColor(q) {
+  if (months.includes(q)) {
+    divs[q].style.backgroundColor = monthColors[q];
+  } else {
+    divs[q].style.backgroundColor = 'transparent';
+  }
+};
+
+var _loop = function _loop(_q) {
+  divs[_q].onclick = function () {
+    if (months.includes(_q)) {
+      months.splice(months.indexOf(_q), 1);
+    } else {
+      months.push(_q);
+    }
+
+    setColor(_q);
+    draw(true);
+  };
+
+  divs[_q].onmouseleave = function () {
+    return setColor(_q);
+  };
+
+  divs[_q].onmouseover = function () {
+    return divs[_q].style.backgroundColor = monthColors[_q] + '44';
+  };
+};
+
+for (var _q = 0; _q < divs.length; _q++) {
+  _loop(_q);
+} //output.innerHTML = `Days: 7, R: ${getR(initialDays)}`;
+
+
+slider.oninput = draw; //output.innerHTML = `Days: ${this.value}, R: ${getR(days)}`;
+},{"./lib/drawR":"lib/drawR.js","./lib/drawScatter":"lib/drawScatter.js","./lib/getDays":"lib/getDays.js","./lib/monthColors":"lib/monthColors.js","./lib/drawSymbols":"lib/drawSymbols.js"}],"../../.config/yarn/global/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -373,7 +435,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54079" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62496" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
