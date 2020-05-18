@@ -165,10 +165,13 @@ var data = require('../data.json');
 
 var getDays = function getDays(limit, months) {
   var days = [];
-  var dayOfWeek = 1;
+  var firstDays = [1, 3, 6, 1, 4, 0, 2, 5, 0, 3];
+  var dayOfWeek;
 
   for (var q = 0; q < data.tournaments.length - 1; q++) {
     if (months.includes(q)) {
+      dayOfWeek = firstDays[q];
+
       for (var r = 0; r < data.tournaments[q].length; r++) {
         var tournaments = 0;
 
@@ -177,7 +180,6 @@ var getDays = function getDays(limit, months) {
             tournaments += data.tournaments[q][r + s];
           } else if (data.tournaments[q + 1]) {
             for (var t = 0; t < limit + 1 - s; t++) {
-              //console.log(data.tournaments[q + 1][t]);
               tournaments += data.tournaments[q + 1][t];
             }
 
@@ -234,7 +236,7 @@ var _require = require('./measurements'),
 
 var x = d3.scaleLinear().domain([0, 28]).range([0, width]);
 var y = d3.scaleLinear().domain([0, 1]).range([height, 0]);
-var svg = createGraph('r', x, 'x Days', y, 'R', true);
+var svg = createGraph('r', x, 'n Days', y, 'Correlational Coefficient (R)', true);
 
 var drawR = function drawR(limit, months) {
   var rs = [];
@@ -274,7 +276,7 @@ var _require = require('./measurements'),
 
 var x = d3.scaleLinear().domain([0, 140]).range([0, width]);
 var y = d3.scaleLinear().domain([0, 7000]).range([height, 0]);
-var svg = createGraph('scatter', x, 'Tournaments within next x days (indicated on slider)', y, 'Questions answered within the day');
+var svg = createGraph('scatter', x, 'Tournaments within next n days (as per slider)', y, 'Questions answered within the day');
 
 var drawScatter = function drawScatter(days) {
   var symbol = d3.symbol().size(80);
