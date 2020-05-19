@@ -4,28 +4,34 @@
 		<meta charset="utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>Quiz Watch Data</title>
+		<title>Quiz Watch Data Analysis</title>
 		<link
 			href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
 			rel="stylesheet"
 			type="text/css"
 		/>
 		<link
-			href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500&display=swap"
+			href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap"
 			rel="stylesheet"
 		/>
 		<link href="./index.css" rel="stylesheet" type="text/css" />
 	</head>
 	<body>
 		<!--<div id="output"></div>-->
+		<header>
+			<a href="https://apps.apple.com/us/app/quiz-watch/id1454913754">
+				<img alt="Quiz Watch Logo" src="./quiz-watch-logo.png" />
+			</a>
+			<h1>
+				Quiz Watch Data Analysis: How study trends change according to Quiz Bowl
+				tournament frequency
+			</h1>
+		</header>
 		<section id="charts">
 			<div id="scatter"></div>
 			<div id="r"></div>
 		</section>
 		<section id="info">
-			<div id="slidecontainer">
-				<input type="range" min="0" max="28" value="7" id="slider" />
-			</div>
 			<div id="colors">
 				<div>
 					<div><p>Apr 2019</p></div>
@@ -89,6 +95,16 @@
 				</div>
 			</div>
 		</section>
+		<div id="gradient"></div>
+		<section id="description">
+			<h3>Summary</h3>
+			<p></p>
+			<h3>Footnotes</h3>
+		</section>
+		<div id="slider-container">
+			<p>Control <em>n</em> with the slider</p>
+			<div><input type="range" min="0" max="28" value="7" id="slider" /></div>
+		</div>
 		<script src="https://d3js.org/d3.v5.min.js"></script>
 		<script src="./d3.js" type="text/javascript"></script>
 	</body>

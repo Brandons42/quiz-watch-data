@@ -119,13 +119,13 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   return newRequire;
 })({"lib/measurements.js":[function(require,module,exports) {
 var margin = {
-  top: 10,
+  top: 50,
   right: 45,
   bottom: 50,
   left: 75
 };
 module.exports.margin = margin;
-var docWidth = document.body.clientWidth / (document.body.clientWidth > 700 ? 2 : 1);
+var docWidth = document.body.clientWidth / (document.body.clientWidth > 1100 ? 2 : 1);
 module.exports.height = docWidth * 4 / 5 - margin.top - margin.bottom;
 module.exports.width = docWidth - margin.left - margin.right;
 },{}],"lib/createGraph.js":[function(require,module,exports) {
@@ -134,7 +134,7 @@ var _require = require('./measurements'),
     margin = _require.margin,
     width = _require.width;
 
-module.exports = function (id, xAxis, xLabel, yAxis, yLabel, heat) {
+module.exports = function (id, title, xAxis, xLabel, yAxis, yLabel, heat) {
   var svg = d3.select('#' + id).append('svg').attr('height', height + margin.top + margin.bottom).attr('width', width + margin.left + margin.right).append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
   svg.append('rect').attr('x', 0).attr('y', 0).attr('height', height).attr('width', width).style('fill', '#EBEBEB');
 
@@ -150,7 +150,8 @@ module.exports = function (id, xAxis, xLabel, yAxis, yLabel, heat) {
   }
 
   svg.append('g').attr('transform', 'translate(0,' + height + ')').call(d3.axisBottom(xAxis).tickSize(-height).ticks(9)).select('.domain').remove();
-  svg.append('text').attr('class', 'label').attr('dominant-baseline', 'middle').attr('text-anchor', 'middle').attr('x', width / 2).attr('y', height + margin.top + 20).text(xLabel);
+  svg.append('text').attr('class', 'title').attr('dominant-baseline', 'middle').attr('text-anchor', 'middle').attr('x', width / 2).attr('y', -margin.top / 2).text(title);
+  svg.append('text').attr('class', 'label').attr('dominant-baseline', 'middle').attr('text-anchor', 'middle').attr('x', width / 2).attr('y', height + 30).text(xLabel);
   svg.append('g').call(d3.axisLeft(yAxis).tickSize(-width).ticks(6)).select('.domain').remove();
   svg.append('text').attr('class', 'label').attr('dominant-baseline', 'middle').attr('text-anchor', 'middle').attr('transform', 'rotate(-90)').attr('x', -margin.top - height / 2).attr('y', -margin.left + 25).text(yLabel);
   return svg;
@@ -236,7 +237,7 @@ var _require = require('./measurements'),
 
 var x = d3.scaleLinear().domain([0, 28]).range([0, width]);
 var y = d3.scaleLinear().domain([0, 1]).range([height, 0]);
-var svg = createGraph('r', x, 'n Days', y, 'Correlational Coefficient (R)', true);
+var svg = createGraph('r', 'Figure 2: Strength of Correlation from Figure 1 for each n Value', x, 'n Days', y, 'Correlational Coefficient (r)', true);
 
 var drawR = function drawR(limit, months) {
   var rs = [];
@@ -252,8 +253,8 @@ var drawR = function drawR(limit, months) {
     return x(d.x);
   }).y(function (d) {
     return y(d.y > 0 ? d.y : 0);
-  })).attr('fill', 'none').attr('stroke', '#26377c').attr('stroke-width', 5);
-  svg.append('circle').attr('class', 'dots').attr('cx', x(rs[limit].x)).attr('cy', y(rs[limit].y > 0 ? rs[limit].y : 0)).attr('fill', '#26377c').attr('r', 12);
+  })).attr('fill', 'none').attr('stroke', '#0039e6').attr('stroke-width', 5);
+  svg.append('circle').attr('class', 'dots').attr('cx', x(rs[limit].x)).attr('cy', y(rs[limit].y > 0 ? rs[limit].y : 0)).attr('fill', '#0039e6').attr('r', 12);
 };
 
 module.exports = drawR;
@@ -276,7 +277,60 @@ var _require = require('./measurements'),
 
 var x = d3.scaleLinear().domain([0, 140]).range([0, width]);
 var y = d3.scaleLinear().domain([0, 7000]).range([height, 0]);
-var svg = createGraph('scatter', x, 'Tournaments within next n days (as per slider)', y, 'Questions answered within the day');
+var svg = createGraph('scatter', 'Figure 1: Quiz Watch Usage and Quiz Bowl Tournament Frequency', x, 'Quiz Bowl Tournaments Within Next n Days (as per slider)', y, 'Quiz Watch Questions Answered on Day');
+var daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+var semiTransparent = '#ffffff88';
+var white = 'white';
+svg.append('rect').attr('class', 'key-top').attr('height', 30).attr('width', 140).attr('x', width - 150).attr('y', 10).style('fill', semiTransparent);
+svg.append('text').attr('class', 'key-top').attr('dominant-baseline', 'middle').attr('text-anchor', 'middle').attr('x', width - 85).attr('y', 25).style('font-weight', 500).style('pointer-events', 'none').style('text-decoration', 'underline').text('Key');
+svg.append('rect').attr('class', 'key').attr('height', 250).attr('width', 140).attr('x', width - 150).attr('y', 40).style('display', 'none').style('fill', white);
+
+for (var q = 0; q < 7; q++) {
+  svg.append('path').attr('class', 'key').attr('d', d3.symbol().type(symbols[q]).size(300)).attr('transform', "translate(".concat(width - 30, ",").concat(60 + q * 35, ")")).style('display', 'none');
+  svg.append('text').attr('class', 'key').attr('dominant-baseline', 'middle').attr('text-anchor', 'end').attr('x', width - 50).attr('y', 60 + q * 35).style('display', 'none').style('font-weight', 300).text(daysOfWeek[q]);
+}
+
+var keyElements = document.getElementsByClassName('key');
+var keyTops = document.getElementsByClassName('key-top');
+var extended = false;
+
+var toggleDisplay = function toggleDisplay() {
+  keyElements[0].style.fill = white;
+
+  for (var _q = 0; _q < keyElements.length; _q++) {
+    keyElements[_q].style.display = extended ? 'none' : 'initial';
+  }
+
+  extended = !extended;
+
+  if (!extended && !over) {
+    keyTops[0].style.fill = semiTransparent;
+  }
+};
+
+var over = false;
+
+var toggleHighlight = function toggleHighlight() {
+  over = !over;
+
+  if (!extended) {
+    if (over) {
+      keyTops[0].style.fill = white;
+    } else {
+      keyElements[0].style.fill = semiTransparent;
+      keyTops[0].style.fill = semiTransparent;
+    }
+  }
+};
+
+keyTops[0].onclick = toggleDisplay;
+keyTops[0].onmouseleave = toggleHighlight;
+keyTops[0].onmouseenter = toggleHighlight;
+keyTops[1].onclick = toggleDisplay;
+
+for (var _q2 = 0; _q2 < keyElements.length; _q2++) {
+  keyElements[_q2].onclick = toggleDisplay;
+}
 
 var drawScatter = function drawScatter(days) {
   var symbol = d3.symbol().size(80);
@@ -314,7 +368,7 @@ var svgs = _toConsumableArray(document.getElementById('symbols').children).map(f
 });
 
 for (var q = 0; q < 7; q++) {
-  d3.select(svgs[q]).append('svg').attr('overflow', 'visible').attr('x', '50%').attr('y', '50%').append('path').attr('d', d3.symbol().type(symbols[q]).size(1000));
+  d3.select(svgs[q]).append('svg').attr('overflow', 'visible').attr('x', '50%').attr('y', '50%').append('path').attr('d', d3.symbol().type(symbols[q]).size(300));
 }
 },{"./symbols":"lib/symbols.js"}],"d3.js":[function(require,module,exports) {
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
@@ -409,7 +463,7 @@ for (var _q = 0; _q < divs.length; _q++) {
 
 
 slider.oninput = draw; //output.innerHTML = `Days: ${this.value}, R: ${getR(days)}`;
-},{"./lib/drawR":"lib/drawR.js","./lib/drawScatter":"lib/drawScatter.js","./lib/getDays":"lib/getDays.js","./lib/monthColors":"lib/monthColors.js","./lib/drawSymbols":"lib/drawSymbols.js"}],"../../.config/yarn/global/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./lib/drawR":"lib/drawR.js","./lib/drawScatter":"lib/drawScatter.js","./lib/getDays":"lib/getDays.js","./lib/monthColors":"lib/monthColors.js","./lib/drawSymbols":"lib/drawSymbols.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -437,7 +491,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62496" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64509" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -613,5 +667,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../../.config/yarn/global/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","d3.js"], null)
+},{}]},{},["node_modules/parcel-bundler/src/builtins/hmr-runtime.js","d3.js"], null)
 //# sourceMappingURL=/d3.38280c16.js.map
