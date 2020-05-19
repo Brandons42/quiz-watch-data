@@ -2,7 +2,6 @@ const drawR = require('./lib/drawR');
 const drawScatter = require('./lib/drawScatter');
 const getDays = require('./lib/getDays');
 const monthColors = require('./lib/monthColors');
-require('./lib/drawSymbols');
 //const getR = require('./lib/getR');
 
 //const output = document.getElementById('output');

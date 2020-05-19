@@ -348,29 +348,7 @@ var drawScatter = function drawScatter(days) {
 };
 
 module.exports = drawScatter;
-},{"./createGraph":"lib/createGraph.js","./monthColors":"lib/monthColors.js","./symbols":"lib/symbols.js","./measurements":"lib/measurements.js"}],"lib/drawSymbols.js":[function(require,module,exports) {
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-var symbols = require('./symbols');
-
-var svgs = _toConsumableArray(document.getElementById('symbols').children).map(function (div) {
-  return div.children[0];
-});
-
-for (var q = 0; q < 7; q++) {
-  d3.select(svgs[q]).append('svg').attr('overflow', 'visible').attr('x', '50%').attr('y', '50%').append('path').attr('d', d3.symbol().type(symbols[q]).size(300));
-}
-},{"./symbols":"lib/symbols.js"}],"d3.js":[function(require,module,exports) {
+},{"./createGraph":"lib/createGraph.js","./monthColors":"lib/monthColors.js","./symbols":"lib/symbols.js","./measurements":"lib/measurements.js"}],"d3.js":[function(require,module,exports) {
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -389,9 +367,7 @@ var drawScatter = require('./lib/drawScatter');
 
 var getDays = require('./lib/getDays');
 
-var monthColors = require('./lib/monthColors');
-
-require('./lib/drawSymbols'); //const getR = require('./lib/getR');
+var monthColors = require('./lib/monthColors'); //const getR = require('./lib/getR');
 //const output = document.getElementById('output');
 
 
@@ -463,7 +439,7 @@ for (var _q = 0; _q < divs.length; _q++) {
 
 
 slider.oninput = draw; //output.innerHTML = `Days: ${this.value}, R: ${getR(days)}`;
-},{"./lib/drawR":"lib/drawR.js","./lib/drawScatter":"lib/drawScatter.js","./lib/getDays":"lib/getDays.js","./lib/monthColors":"lib/monthColors.js","./lib/drawSymbols":"lib/drawSymbols.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./lib/drawR":"lib/drawR.js","./lib/drawScatter":"lib/drawScatter.js","./lib/getDays":"lib/getDays.js","./lib/monthColors":"lib/monthColors.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -491,7 +467,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64509" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55921" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
