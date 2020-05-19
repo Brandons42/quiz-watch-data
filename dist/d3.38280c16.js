@@ -334,13 +334,9 @@ for (var _q2 = 0; _q2 < keyElements.length; _q2++) {
 
 var drawScatter = function drawScatter(days) {
   var symbol = d3.symbol().size(80);
-  svg.append('g').attr('class', 'dots').selectAll('dot').data(days).enter() //.append('circle')
-  .append('path') //.attr('cx', d => x(d.tournaments))
-  //.attr('cy', d => y(d.questions))
-  .attr('d', symbol.type(function (d) {
+  svg.append('g').attr('class', 'dots').selectAll('dot').data(days).enter().append('path').attr('d', symbol.type(function (d) {
     return symbols[d.day];
-  })) //.attr('r', 1.5)
-  .attr('transform', function (d) {
+  })).attr('transform', function (d) {
     return "translate(".concat(x(d.tournaments), ",").concat(y(d.questions), ")");
   }).style('fill', function (d) {
     return monthColors[d.month];
@@ -367,9 +363,7 @@ var drawScatter = require('./lib/drawScatter');
 
 var getDays = require('./lib/getDays');
 
-var monthColors = require('./lib/monthColors'); //const getR = require('./lib/getR');
-//const output = document.getElementById('output');
-
+var monthColors = require('./lib/monthColors');
 
 var divs = _toConsumableArray(document.getElementById('colors').children).map(function (div) {
   return div.children[0];
@@ -435,10 +429,9 @@ var _loop = function _loop(_q) {
 
 for (var _q = 0; _q < divs.length; _q++) {
   _loop(_q);
-} //output.innerHTML = `Days: 7, R: ${getR(initialDays)}`;
+}
 
-
-slider.oninput = draw; //output.innerHTML = `Days: ${this.value}, R: ${getR(days)}`;
+slider.oninput = draw;
 },{"./lib/drawR":"lib/drawR.js","./lib/drawScatter":"lib/drawScatter.js","./lib/getDays":"lib/getDays.js","./lib/monthColors":"lib/monthColors.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';

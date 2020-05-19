@@ -2,9 +2,6 @@ const drawR = require('./lib/drawR');
 const drawScatter = require('./lib/drawScatter');
 const getDays = require('./lib/getDays');
 const monthColors = require('./lib/monthColors');
-//const getR = require('./lib/getR');
-
-//const output = document.getElementById('output');
 
 const divs = [...document.getElementById('colors').children].map(
 	div => div.children[0]
@@ -71,8 +68,4 @@ for (let q = 0; q < divs.length; q++) {
 		(divs[q].style.backgroundColor = monthColors[q] + '44');
 }
 
-//output.innerHTML = `Days: 7, R: ${getR(initialDays)}`;
-
 slider.oninput = draw;
-
-//output.innerHTML = `Days: ${this.value}, R: ${getR(days)}`;

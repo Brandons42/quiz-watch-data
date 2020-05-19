@@ -17,7 +17,6 @@
 		<link href="./index.css" rel="stylesheet" type="text/css" />
 	</head>
 	<body>
-		<!--<div id="output"></div>-->
 		<header>
 			<a href="https://apps.apple.com/us/app/quiz-watch/id1454913754">
 				<img alt="Quiz Watch Logo" src="./quiz-watch-logo.png" />
@@ -31,11 +30,68 @@
 			<div id="scatter"></div>
 			<div id="r"></div>
 		</section>
-		<div id="gradient"></div>
-		<section id="description">
-			<h3>Summary</h3>
-			<p></p>
-			<h3>Footnotes</h3>
+		<section id="info">
+			<h2>Explanation</h2>
+			<h3>Figure 1</h3>
+			<p>
+				In figure 1, each data point represents a single day that falls in one
+				of the selected months. The y-value of the data point is a reflection of
+				the number of questions answered on the
+				<a href="https://apps.apple.com/us/app/quiz-watch/id1454913754"
+					>Quiz Watch app</a
+				>
+				on that particular day. The x-value of the data point is the number of
+				Quiz Bowl tournaments according to the
+				<a href="https://hsquizbowl.org/db/">hsquizbowl.org database</a>
+				occuring on that day, and the next <em>n</em> days. The value of
+				<em>n</em> is controlled by the slider. To give an example, if
+				<em>n</em> is 2, the x-value for the January 1 data point will be the
+				number of Quiz Bowl tournaments occuring on January 1, January 2, and
+				January 3.
+			</p>
+			<h3>Figure 2</h3>
+			<p>
+				Figure 2 demonstrates how strong the correllation for on Figure 1 for
+				any given value of <em>n</em>. For some selections of months, the
+				y-value actually becomes negative. On the visual representation of the
+				graph, these negative values are changed to 0.
+			</p>
+			<h2>My Intentions and the Results</h2>
+			<p>
+				I created these graphs with the intention of finding out if
+				Quiz-Bowl-ers significantly ramp up their studying in preparation for
+				tournaments, or if they keep up a study routine that goes unaffected by
+				the coming and going of tournaments. By including the slider, I also
+				hoped to find out how far in advance Quiz-Bowl-ers started this
+				study-rush, if it happened at all.
+			</p>
+			<p>
+				When I first put together the graph and examined it, I thought I had
+				found that Quiz-Bowl-ers are most likely to study about 2 weeks in
+				advance for tournaments. This is because when all months are selected,
+				the strongest correlation occurs when <em>n</em> = 14 days; however,
+				when playing around with month selections, Figure 2 fluctuates
+				erratically, and any pattern you thought you might've noticed in the
+				initial graph gets thrown into question. After seeing the
+				inconsistencies in the data thus far, it appears that my findings for
+				the research I originally intended to do are inconclusive. Perhaps the
+				data will become more clear after more time, or perhaps none of this
+				data is reflective of actual tendencies of Quiz-Bowl-ers and it's just
+				reflective of the coincidental popularity of my app.
+			</p>
+			<p>
+				I still believes there's value in my data and findings to be made from
+				it, however. For example, in general, it seems that months with more
+				Quiz Bowl tournaments tend to have more Quiz Watch usage.
+			</p>
+			<h2>About</h2>
+			<p>
+				This web page was put together by
+				<a href="https://bsuen.netlify.app/">Brandon Suen</a>.
+			</p>
+			<a href="https://bsuen.netlify.app/"
+				><img alt="Brandon Suen logo" src="./bsuen-logo.png"
+			/></a>
 		</section>
 		<section id="controls">
 			<div>
