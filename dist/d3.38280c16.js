@@ -130,6 +130,7 @@ module.exports.height = docWidth * 4 / 5 - margin.top - margin.bottom;
 module.exports.width = docWidth - margin.left - margin.right;
 },{}],"lib/createGraph.js":[function(require,module,exports) {
 var _require = require('./measurements'),
+    clientWidth = _require.clientWidth,
     height = _require.height,
     margin = _require.margin,
     width = _require.width;
@@ -237,7 +238,7 @@ var _require = require('./measurements'),
 
 var x = d3.scaleLinear().domain([0, 28]).range([0, width]);
 var y = d3.scaleLinear().domain([0, 1]).range([height, 0]);
-var svg = createGraph('r', 'Figure 2: Strength of Correlation from Figure 1 for each n Value', x, 'n Days', y, 'Correlational Coefficient (r)', true);
+var svg = createGraph('r', 'Figure 2: Strength of Correlation from Figure 1', x, 'n Days', y, 'Correlational Coefficient (r)', true);
 
 var drawR = function drawR(limit, months) {
   var rs = [];
@@ -277,7 +278,7 @@ var _require = require('./measurements'),
 
 var x = d3.scaleLinear().domain([0, 140]).range([0, width]);
 var y = d3.scaleLinear().domain([0, 7000]).range([height, 0]);
-var svg = createGraph('scatter', 'Figure 1: Quiz Watch Usage and Quiz Bowl Tournament Frequency', x, 'Quiz Bowl Tournaments Within Next n Days (as per slider)', y, 'Quiz Watch Questions Answered on Day');
+var svg = createGraph('scatter', 'Figure 1: Quiz Bowl Tournaments and App Usage', x, 'Quiz Bowl Tournaments Within Next n Days', y, 'Quiz Watch Questions Answered');
 var daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 var semiTransparent = '#ffffff88';
 var white = 'white';
